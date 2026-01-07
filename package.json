@@ -1,0 +1,72 @@
+{
+  "name": "vault-commander",
+  "title": "Vault Commander",
+  "description": "Speed layer for Obsidian vault - capture, search, and daily note workflows",
+  "icon": "icon.png",
+  "author": "shanebarringer",
+  "categories": ["Productivity", "Applications"],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "capture",
+      "title": "Vault Capture",
+      "subtitle": "Quick capture to inbox",
+      "description": "Quick capture thoughts to atomic inbox notes with backlinks to daily note",
+      "mode": "view"
+    },
+    {
+      "name": "today",
+      "title": "Vault Today",
+      "subtitle": "Open daily note",
+      "description": "Open or create today's daily note in Obsidian",
+      "mode": "no-view"
+    },
+    {
+      "name": "add",
+      "title": "Vault Add",
+      "subtitle": "Add to daily note",
+      "description": "Append text to a specific section of today's daily note",
+      "mode": "view"
+    },
+    {
+      "name": "search",
+      "title": "Vault Search",
+      "subtitle": "Search vault",
+      "description": "Fuzzy search across entire Obsidian vault",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "vaultPath",
+      "type": "directory",
+      "required": true,
+      "title": "Vault Path",
+      "description": "Path to your Obsidian vault",
+      "default": "~/vault"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.93.0",
+    "dayjs": "^1.11.13",
+    "fuse.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@raycast/eslint-config": "^1.0.11",
+    "@types/node": "22.14.0",
+    "@types/react": "18.3.18",
+    "typescript": "^5.7.2"
+  },
+  "scripts": {
+    "build": "ray build --skip-types -e dist -o dist",
+    "dev": "ray develop",
+    "check": "biome check --write .",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "lint:ray": "ray lint",
+    "fix-lint": "ray lint --fix",
+    "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
