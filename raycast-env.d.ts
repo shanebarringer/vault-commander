@@ -9,7 +9,9 @@
 
 type ExtensionPreferences = {
   /** Vault Path - Path to your Obsidian vault */
-  "vaultPath": string
+  "vaultPath": string,
+  /** Claude API Key - Anthropic API key for AI features (ask, summarize, reflect commands) */
+  "claudeApiKey"?: string
 }
 
 /** Preferences accessible in all the extension's commands */
@@ -24,6 +26,12 @@ declare namespace Preferences {
   export type Add = ExtensionPreferences & {}
   /** Preferences accessible in the `search` command */
   export type Search = ExtensionPreferences & {}
+  /** Preferences accessible in the `ask` command */
+  export type Ask = ExtensionPreferences & {}
+  /** Preferences accessible in the `summarize` command */
+  export type Summarize = ExtensionPreferences & {}
+  /** Preferences accessible in the `reflect` command */
+  export type Reflect = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
@@ -35,5 +43,11 @@ declare namespace Arguments {
   export type Add = {}
   /** Arguments passed to the `search` command */
   export type Search = {}
+  /** Arguments passed to the `ask` command */
+  export type Ask = {}
+  /** Arguments passed to the `summarize` command */
+  export type Summarize = {}
+  /** Arguments passed to the `reflect` command */
+  export type Reflect = {}
 }
 
