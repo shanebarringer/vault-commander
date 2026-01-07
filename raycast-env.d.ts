@@ -9,7 +9,9 @@
 
 type ExtensionPreferences = {
   /** Vault Path - Path to your Obsidian vault */
-  "vaultPath": string
+  "vaultPath": string,
+  /** Todoist API Key - Todoist API key for task management features (task, tasks, inbox commands) */
+  "todoistApiKey"?: string
 }
 
 /** Preferences accessible in all the extension's commands */
@@ -24,6 +26,12 @@ declare namespace Preferences {
   export type Add = ExtensionPreferences & {}
   /** Preferences accessible in the `search` command */
   export type Search = ExtensionPreferences & {}
+  /** Preferences accessible in the `task` command */
+  export type Task = ExtensionPreferences & {}
+  /** Preferences accessible in the `tasks` command */
+  export type Tasks = ExtensionPreferences & {}
+  /** Preferences accessible in the `inbox` command */
+  export type Inbox = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
@@ -35,5 +43,11 @@ declare namespace Arguments {
   export type Add = {}
   /** Arguments passed to the `search` command */
   export type Search = {}
+  /** Arguments passed to the `task` command */
+  export type Task = {}
+  /** Arguments passed to the `tasks` command */
+  export type Tasks = {}
+  /** Arguments passed to the `inbox` command */
+  export type Inbox = {}
 }
 

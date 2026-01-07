@@ -37,6 +37,27 @@
       "subtitle": "Search vault",
       "description": "Fuzzy search across entire Obsidian vault",
       "mode": "view"
+    },
+    {
+      "name": "task",
+      "title": "Vault Task",
+      "subtitle": "Quick task creation",
+      "description": "Create a new task in Todoist with natural language due dates",
+      "mode": "view"
+    },
+    {
+      "name": "tasks",
+      "title": "Vault Tasks",
+      "subtitle": "Today's tasks",
+      "description": "View and manage today's tasks from Todoist",
+      "mode": "view"
+    },
+    {
+      "name": "inbox",
+      "title": "Vault Inbox",
+      "subtitle": "Todoist inbox triage",
+      "description": "Review and organize tasks in your Todoist inbox",
+      "mode": "view"
     }
   ],
   "preferences": [
@@ -47,6 +68,13 @@
       "title": "Vault Path",
       "description": "Path to your Obsidian vault",
       "default": "~/vault"
+    },
+    {
+      "name": "todoistApiKey",
+      "type": "password",
+      "required": false,
+      "title": "Todoist API Key",
+      "description": "Todoist API key for task management features (task, tasks, inbox commands)"
     }
   ],
   "dependencies": {
