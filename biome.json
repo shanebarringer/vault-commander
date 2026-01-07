@@ -34,6 +34,6 @@
     }
   },
   "files": {
-    "ignore": ["node_modules", "dist", ".git", "*.json", "raycast-env.d.ts"]
+    "ignore": ["node_modules", "dist", ".git", "coverage", "*.json", "raycast-env.d.ts"]
   }
 }
