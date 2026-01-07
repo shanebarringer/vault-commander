@@ -30,6 +30,20 @@ export const createClaudeClient = (apiKey: string): Anthropic => {
 }
 
 /**
+ * Extract text content from Claude message response
+ *
+ * Claude responses contain an array of content blocks. This helper
+ * finds the first text block and extracts its content.
+ */
+const extractTextResponse = (
+  message: Anthropic.Message,
+  fallback: string
+): string => {
+  const textBlock = message.content.find((block) => block.type === 'text')
+  return textBlock?.type === 'text' ? textBlock.text : fallback
+}
+
+/**
  * Find relevant context from vault for a query
  */
 export const findRelevantContext = (index: SearchIndex, query: string): string => {
@@ -39,9 +53,7 @@ export const findRelevantContext = (index: SearchIndex, query: string): string =
     return 'No relevant notes found in the vault.'
   }
 
-  return results
-    .map((r, i) => `[Note ${i + 1}: ${r.filename}]\n${r.preview}`)
-    .join('\n\n')
+  return results.map((r, i) => `[Note ${i + 1}: ${r.filename}]\n${r.preview}`).join('\n\n')
 }
 
 /**
@@ -69,8 +81,7 @@ Keep responses concise and actionable.`,
     ],
   })
 
-  const textBlock = message.content.find((block) => block.type === 'text')
-  return textBlock?.type === 'text' ? textBlock.text : 'Unable to generate response.'
+  return extractTextResponse(message, 'Unable to generate response.')
 }
 
 /**
@@ -99,8 +110,7 @@ export const summarizeNotes = async (
     ],
   })
 
-  const textBlock = message.content.find((block) => block.type === 'text')
-  return textBlock?.type === 'text' ? textBlock.text : 'Unable to generate summary.'
+  return extractTextResponse(message, 'Unable to generate summary.')
 }
 
 /**
@@ -132,8 +142,7 @@ Keep it concise - one powerful question or observation that invites genuine refl
     ],
   })
 
-  const textBlock = message.content.find((block) => block.type === 'text')
-  return textBlock?.type === 'text' ? textBlock.text : 'Unable to generate reflection.'
+  return extractTextResponse(message, 'Unable to generate reflection.')
 }
 
 // Export types

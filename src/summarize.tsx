@@ -5,15 +5,19 @@
  * Supports brief, detailed, and bullet point summary styles.
  */
 
-import { Action, ActionPanel, Detail, Form, List, showToast, Toast } from '@raycast/api'
-import { useEffect, useMemo, useState } from 'react'
-import { createClaudeClient, summarizeNotes, type SummaryStyle } from './lib/claude'
+import { Action, ActionPanel, Detail, List, Toast, showToast } from '@raycast/api'
+import { useMemo, useState } from 'react'
+import { useSearchIndex } from './hooks/useSearchIndex'
+import { type SummaryStyle, createClaudeClient, summarizeNotes } from './lib/claude'
 import { getConfig } from './lib/config'
-import { buildSearchIndex, searchVault } from './lib/search'
+import { searchVault } from './lib/search'
 import { readFile } from './lib/vault'
-import type { SearchIndex, SearchResult, VaultCommanderConfig } from './types'
+import type { SearchResult, VaultCommanderConfig } from './types'
 
 type ViewState = 'search' | 'summarizing' | 'result'
+
+/** Maximum combined content size for API calls (characters) */
+const MAX_CONTENT_SIZE = 100_000
 
 export default function Command() {
   const [searchText, setSearchText] = useState('')
@@ -21,33 +25,22 @@ export default function Command() {
   const [summaryStyle, setSummaryStyle] = useState<SummaryStyle>('brief')
   const [summary, setSummary] = useState<string | null>(null)
   const [viewState, setViewState] = useState<ViewState>('search')
-  const [isLoading, setIsLoading] = useState(true)
-  const [index, setIndex] = useState<SearchIndex | null>(null)
 
   const config = useMemo<VaultCommanderConfig | null>(() => {
     try {
       return getConfig()
-    } catch {
+    } catch (e) {
+      showToast({
+        style: Toast.Style.Failure,
+        title: 'Configuration error',
+        message: e instanceof Error ? e.message : 'Unable to load vault configuration',
+      })
       return null
     }
   }, [])
 
-  // Build search index on mount
-  useEffect(() => {
-    if (!config) return
-    try {
-      const searchIndex = buildSearchIndex(config.vaultPath)
-      setIndex(searchIndex)
-    } catch (e) {
-      showToast({
-        style: Toast.Style.Failure,
-        title: 'Failed to index vault',
-        message: e instanceof Error ? e.message : 'Unknown error',
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }, [config])
+  // Use shared search index hook with caching
+  const { index, isIndexing } = useSearchIndex(config?.vaultPath)
 
   // Search results
   const results = useMemo(() => {
@@ -83,7 +76,6 @@ export default function Command() {
     }
 
     setViewState('summarizing')
-    setIsLoading(true)
 
     try {
       // Read full content of selected notes
@@ -98,6 +90,17 @@ export default function Command() {
         })
         .join('\n\n---\n\n')
 
+      // Content size check to prevent API issues
+      if (contents.length > MAX_CONTENT_SIZE) {
+        await showToast({
+          style: Toast.Style.Failure,
+          title: 'Content too large',
+          message: `Selected notes exceed ${(MAX_CONTENT_SIZE / 1000).toFixed(0)}K characters. Select fewer notes.`,
+        })
+        setViewState('search')
+        return
+      }
+
       const client = createClaudeClient(config.claudeApiKey)
       const result = await summarizeNotes(client, contents, summaryStyle)
       setSummary(result)
@@ -109,8 +112,6 @@ export default function Command() {
         message: e instanceof Error ? e.message : 'Unknown error',
       })
       setViewState('search')
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -154,12 +155,16 @@ export default function Command() {
   // Search and select notes
   return (
     <List
-      isLoading={isLoading}
+      isLoading={isIndexing}
       searchBarPlaceholder="Search notes to summarize..."
       onSearchTextChange={setSearchText}
       throttle
       searchBarAccessory={
-        <List.Dropdown tooltip="Summary Style" value={summaryStyle} onChange={(v) => setSummaryStyle(v as SummaryStyle)}>
+        <List.Dropdown
+          tooltip="Summary Style"
+          value={summaryStyle}
+          onChange={(v) => setSummaryStyle(v as SummaryStyle)}
+        >
           <List.Dropdown.Item title="Brief (2-3 sentences)" value="brief" />
           <List.Dropdown.Item title="Detailed" value="detailed" />
           <List.Dropdown.Item title="Bullet Points" value="bullets" />
@@ -210,8 +215,11 @@ export default function Command() {
         })}
       </List.Section>
 
-      {!isLoading && results.length === 0 && searchText && (
-        <List.EmptyView title="No Results" description={`No notes found matching "${searchText}"`} />
+      {!isIndexing && results.length === 0 && searchText && (
+        <List.EmptyView
+          title="No Results"
+          description={`No notes found matching "${searchText}"`}
+        />
       )}
     </List>
   )

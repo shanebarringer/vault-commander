@@ -5,41 +5,36 @@
  * Uses semantic search to find relevant context before querying.
  */
 
-import { Action, ActionPanel, Detail, Form, showToast, Toast } from '@raycast/api'
-import { useEffect, useMemo, useState } from 'react'
+import { Action, ActionPanel, Detail, Form, Toast, showToast } from '@raycast/api'
+import { useMemo, useState } from 'react'
+import { useSearchIndex } from './hooks/useSearchIndex'
 import { askVault, createClaudeClient } from './lib/claude'
 import { getConfig } from './lib/config'
-import { buildSearchIndex } from './lib/search'
-import type { SearchIndex, VaultCommanderConfig } from './types'
+import type { VaultCommanderConfig } from './types'
+
+/** Maximum question length to prevent API issues */
+const MAX_QUESTION_LENGTH = 5000
 
 export default function Command() {
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [index, setIndex] = useState<SearchIndex | null>(null)
 
   const config = useMemo<VaultCommanderConfig | null>(() => {
     try {
       return getConfig()
-    } catch {
+    } catch (e) {
+      showToast({
+        style: Toast.Style.Failure,
+        title: 'Configuration error',
+        message: e instanceof Error ? e.message : 'Unable to load vault configuration',
+      })
       return null
     }
   }, [])
 
-  // Build search index on mount
-  useEffect(() => {
-    if (!config) return
-    try {
-      const searchIndex = buildSearchIndex(config.vaultPath)
-      setIndex(searchIndex)
-    } catch (e) {
-      showToast({
-        style: Toast.Style.Failure,
-        title: 'Failed to index vault',
-        message: e instanceof Error ? e.message : 'Unknown error',
-      })
-    }
-  }, [config])
+  // Use shared search index hook with caching
+  const { index, isIndexing } = useSearchIndex(config?.vaultPath)
 
   const handleSubmit = async () => {
     if (!config?.claudeApiKey) {
@@ -65,6 +60,16 @@ export default function Command() {
         style: Toast.Style.Failure,
         title: 'Question required',
         message: 'Please enter a question about your vault',
+      })
+      return
+    }
+
+    // Input validation: reasonable length limit
+    if (question.length > MAX_QUESTION_LENGTH) {
+      showToast({
+        style: Toast.Style.Failure,
+        title: 'Question too long',
+        message: `Please keep questions under ${MAX_QUESTION_LENGTH.toLocaleString()} characters`,
       })
       return
     }
@@ -107,7 +112,7 @@ export default function Command() {
   // Show form for question input
   return (
     <Form
-      isLoading={isLoading}
+      isLoading={isLoading || isIndexing}
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Ask Claude" onSubmit={handleSubmit} />
