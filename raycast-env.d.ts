@@ -17,7 +17,9 @@ type ExtensionPreferences = {
   /** Voice Transcription Path - Folder where Superwhisper saves voice transcriptions */
   "voicePath"?: string,
   /** Meeting Notes Path - Folder where Granola exports meeting notes */
-  "meetingPath"?: string
+  "meetingPath"?: string,
+  /** Scripts Path - Folder containing automation shell scripts (.sh files) */
+  "scriptsPath"?: string
 }
 
 /** Preferences accessible in all the extension's commands */
@@ -48,6 +50,8 @@ declare namespace Preferences {
   export type Voice = ExtensionPreferences & {}
   /** Preferences accessible in the `meeting` command */
   export type Meeting = ExtensionPreferences & {}
+  /** Preferences accessible in the `scripts` command */
+  export type Scripts = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
@@ -75,5 +79,7 @@ declare namespace Arguments {
   export type Voice = {}
   /** Arguments passed to the `meeting` command */
   export type Meeting = {}
+  /** Arguments passed to the `scripts` command */
+  export type Scripts = {}
 }
 

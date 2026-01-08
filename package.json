@@ -93,6 +93,13 @@
       "subtitle": "Import meeting notes",
       "description": "Import meeting notes from Granola to daily note Meeting Notes section",
       "mode": "view"
+    },
+    {
+      "name": "scripts",
+      "title": "Vault Scripts",
+      "subtitle": "Run automation scripts",
+      "description": "Run shell scripts for vault automation and maintenance tasks",
+      "mode": "view"
     }
   ],
   "preferences": [
@@ -131,6 +138,13 @@
       "required": false,
       "title": "Meeting Notes Path",
       "description": "Folder where Granola exports meeting notes"
+    },
+    {
+      "name": "scriptsPath",
+      "type": "directory",
+      "required": false,
+      "title": "Scripts Path",
+      "description": "Folder containing automation shell scripts (.sh files)"
     }
   ],
   "dependencies": {

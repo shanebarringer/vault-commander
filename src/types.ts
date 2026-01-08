@@ -42,6 +42,7 @@ export interface Preferences {
   readonly todoistApiKey?: string
   readonly voicePath?: string
   readonly meetingPath?: string
+  readonly scriptsPath?: string
 }
 
 /**
@@ -88,6 +89,7 @@ export interface VaultCommanderConfig {
   // Phase 4 - Voice & Automation (optional)
   readonly voicePath?: AbsolutePath
   readonly meetingPath?: AbsolutePath
+  readonly scriptsPath?: AbsolutePath
 }
 
 // ============================================================================

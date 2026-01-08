@@ -68,6 +68,7 @@ export const getConfig = (): VaultCommanderConfig => {
     // Phase 4 - Voice & Automation
     voicePath: prefs.voicePath ? expandPath(prefs.voicePath) : undefined,
     meetingPath: prefs.meetingPath ? expandPath(prefs.meetingPath) : undefined,
+    scriptsPath: prefs.scriptsPath ? expandPath(prefs.scriptsPath) : undefined,
   }
 }
 
