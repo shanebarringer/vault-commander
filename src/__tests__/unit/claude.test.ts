@@ -7,7 +7,6 @@ const { MockAnthropic, mockCreate } = vi.hoisted(() => {
   // Must use a proper class/function constructor
   class MockAnthropic {
     messages = { create: mockCreate }
-    constructor(_config: { apiKey: string }) {}
   }
   return { MockAnthropic, mockCreate }
 })
@@ -22,7 +21,7 @@ vi.mock('../../lib/search', () => ({
   searchVault: vi.fn(),
 }))
 
-import Anthropic from '@anthropic-ai/sdk'
+import type Anthropic from '@anthropic-ai/sdk'
 import {
   askVault,
   createClaudeClient,
