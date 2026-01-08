@@ -20,7 +20,7 @@ const DEFAULT_MODEL = 'claude-3-5-sonnet-20241022'
 const MAX_TOKENS = 4096
 
 /** Number of relevant notes to include as context */
-const CONTEXT_NOTES_LIMIT = 5
+const CONTEXT_NOTES_LIMIT = 8
 
 /**
  * Create Claude API client

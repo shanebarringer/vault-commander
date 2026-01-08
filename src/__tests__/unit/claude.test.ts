@@ -76,7 +76,7 @@ describe('claude', () => {
       expect(result).toBe('No relevant notes found in the vault.')
     })
 
-    it('should limit results to 5 notes', () => {
+    it('should limit results to 8 notes', () => {
       const mockResults: SearchResult[] = Array.from({ length: 10 }, (_, i) => ({
         path: `/vault/note${i}.md`,
         filename: `note${i}.md`,
@@ -87,10 +87,10 @@ describe('claude', () => {
 
       const result = findRelevantContext(mockIndex, 'many results')
 
-      // Should only have 5 notes
-      expect(result.match(/\[Note \d+:/g)?.length).toBe(5)
-      expect(result).toContain('[Note 5:')
-      expect(result).not.toContain('[Note 6:')
+      // Should only have 8 notes (CONTEXT_NOTES_LIMIT)
+      expect(result.match(/\[Note \d+:/g)?.length).toBe(8)
+      expect(result).toContain('[Note 8:')
+      expect(result).not.toContain('[Note 9:')
     })
   })
 
