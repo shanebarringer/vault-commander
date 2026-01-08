@@ -161,9 +161,10 @@ describe('voice', () => {
       writeFileSync(join(voiceDir, 'note2.txt'), 'Second note')
       writeFileSync(join(voiceDir, 'note3.txt'), 'Third note')
 
-      const results = importAllTranscriptions(mockConfig, voiceDir)
+      const { results, errors } = importAllTranscriptions(mockConfig, voiceDir)
 
       expect(results).toHaveLength(3)
+      expect(errors).toHaveLength(0)
 
       // All originals should be archived
       expect(existsSync(join(voiceDir, 'note1.txt'))).toBe(false)
@@ -176,9 +177,10 @@ describe('voice', () => {
       expect(existsSync(join(voiceDir, '.imported-note3.txt'))).toBe(true)
     })
 
-    it('should return empty array when no transcriptions', () => {
-      const results = importAllTranscriptions(mockConfig, voiceDir)
+    it('should return empty results when no transcriptions', () => {
+      const { results, errors } = importAllTranscriptions(mockConfig, voiceDir)
       expect(results).toEqual([])
+      expect(errors).toEqual([])
     })
   })
 

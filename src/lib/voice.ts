@@ -7,7 +7,7 @@
  * @module voice
  */
 
-import { readdirSync, renameSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, renameSync, statSync } from 'node:fs'
 import { dirname, extname, join } from 'node:path'
 import dayjs from 'dayjs'
 import type { VaultCommanderConfig } from '../types'
@@ -44,6 +44,16 @@ export interface ImportResult {
   readonly notePath: string
   /** Created vault note filename */
   readonly noteFilename: string
+}
+
+/**
+ * Result of bulk importing transcriptions (partial success support)
+ */
+export interface BulkImportResult {
+  /** Successfully imported transcriptions */
+  readonly results: ImportResult[]
+  /** Failed imports with error details */
+  readonly errors: ReadonlyArray<{ transcription: TranscriptionFile; error: Error }>
 }
 
 /**
@@ -110,6 +120,9 @@ export const importTranscription = (
       dirname(transcription.path),
       `${IMPORTED_PREFIX}${transcription.filename}`
     )
+    if (existsSync(archivePath)) {
+      throw new Error(`Archive file already exists: ${archivePath}`)
+    }
     renameSync(transcription.path, archivePath)
   }
 
@@ -122,14 +135,26 @@ export const importTranscription = (
 
 /**
  * Import all transcriptions from a directory
+ * Returns partial success: both imported results and any errors
  */
 export const importAllTranscriptions = (
   config: VaultCommanderConfig,
   sourcePath: string,
   archiveAfterImport = true
-): ImportResult[] => {
+): BulkImportResult => {
   const transcriptions = listTranscriptions(sourcePath)
-  return transcriptions.map((t) => importTranscription(config, t, archiveAfterImport))
+  const results: ImportResult[] = []
+  const errors: Array<{ transcription: TranscriptionFile; error: Error }> = []
+
+  for (const transcription of transcriptions) {
+    try {
+      results.push(importTranscription(config, transcription, archiveAfterImport))
+    } catch (error) {
+      errors.push({ transcription, error: error as Error })
+    }
+  }
+
+  return { results, errors }
 }
 
 /**

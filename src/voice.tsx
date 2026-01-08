@@ -77,8 +77,17 @@ export default function VoiceImport() {
     if (!config?.voicePath) return
 
     try {
-      const results = importAllTranscriptions(config, config.voicePath)
-      await showHUD(`✓ Imported ${results.length} voice notes`)
+      const { results, errors } = importAllTranscriptions(config, config.voicePath)
+
+      if (errors.length > 0) {
+        await showToast({
+          style: Toast.Style.Failure,
+          title: `Imported ${results.length}, failed ${errors.length}`,
+          message: errors[0].error.message,
+        })
+      } else {
+        await showHUD(`✓ Imported ${results.length} voice notes`)
+      }
       setTranscriptions([])
     } catch (error) {
       await showToast({

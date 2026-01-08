@@ -169,9 +169,10 @@ describe('meeting', () => {
       writeFileSync(join(meetingDir, 'meeting1.md'), '# First\nContent 1')
       writeFileSync(join(meetingDir, 'meeting2.md'), '# Second\nContent 2')
 
-      const results = importAllMeetingNotes(mockConfig, meetingDir)
+      const { results, errors } = importAllMeetingNotes(mockConfig, meetingDir)
 
       expect(results).toHaveLength(2)
+      expect(errors).toHaveLength(0)
 
       // Both should be archived
       expect(existsSync(join(meetingDir, 'meeting1.md'))).toBe(false)
@@ -180,9 +181,10 @@ describe('meeting', () => {
       expect(existsSync(join(meetingDir, '.imported-meeting2.md'))).toBe(true)
     })
 
-    it('should return empty array when no meeting notes', () => {
-      const results = importAllMeetingNotes(mockConfig, meetingDir)
+    it('should return empty results when no meeting notes', () => {
+      const { results, errors } = importAllMeetingNotes(mockConfig, meetingDir)
       expect(results).toEqual([])
+      expect(errors).toEqual([])
     })
   })
 

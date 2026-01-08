@@ -77,8 +77,17 @@ export default function MeetingImport() {
     if (!config?.meetingPath) return
 
     try {
-      const results = importAllMeetingNotes(config, config.meetingPath)
-      await showHUD(`✓ Imported ${results.length} meeting notes`)
+      const { results, errors } = importAllMeetingNotes(config, config.meetingPath)
+
+      if (errors.length > 0) {
+        await showToast({
+          style: Toast.Style.Failure,
+          title: `Imported ${results.length}, failed ${errors.length}`,
+          message: errors[0].error.message,
+        })
+      } else {
+        await showHUD(`✓ Imported ${results.length} meeting notes`)
+      }
       setMeetings([])
     } catch (error) {
       await showToast({

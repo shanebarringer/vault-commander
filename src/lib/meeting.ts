@@ -7,11 +7,11 @@
  * @module meeting
  */
 
-import { readdirSync, renameSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, renameSync, statSync } from 'node:fs'
 import { dirname, extname, join } from 'node:path'
 import dayjs from 'dayjs'
 import type { VaultCommanderConfig } from '../types'
-import { getDailyNoteLink, getTimestamp } from './daily'
+import { getTimestamp } from './daily'
 import { appendToSection, ensureDailyNote, readFile } from './vault'
 
 /** Supported meeting note file extensions */
@@ -44,6 +44,16 @@ export interface MeetingImportResult {
   readonly source: MeetingNoteFile
   /** Daily note path where content was appended */
   readonly dailyNotePath: string
+}
+
+/**
+ * Result of bulk importing meeting notes (partial success support)
+ */
+export interface BulkMeetingImportResult {
+  /** Successfully imported notes */
+  readonly results: MeetingImportResult[]
+  /** Failed imports with error details */
+  readonly errors: ReadonlyArray<{ note: MeetingNoteFile; error: Error }>
 }
 
 /**
@@ -135,6 +145,9 @@ export const importMeetingNote = (
   // Archive source file
   if (archiveAfterImport) {
     const archivePath = join(dirname(note.path), `${IMPORTED_PREFIX}${note.filename}`)
+    if (existsSync(archivePath)) {
+      throw new Error(`Archive file already exists: ${archivePath}`)
+    }
     renameSync(note.path, archivePath)
   }
 
@@ -146,14 +159,26 @@ export const importMeetingNote = (
 
 /**
  * Import all meeting notes from a directory
+ * Returns partial success: both imported results and any errors
  */
 export const importAllMeetingNotes = (
   config: VaultCommanderConfig,
   sourcePath: string,
   archiveAfterImport = true
-): MeetingImportResult[] => {
+): BulkMeetingImportResult => {
   const notes = listMeetingNotes(sourcePath)
-  return notes.map((note) => importMeetingNote(config, note, archiveAfterImport))
+  const results: MeetingImportResult[] = []
+  const errors: Array<{ note: MeetingNoteFile; error: Error }> = []
+
+  for (const note of notes) {
+    try {
+      results.push(importMeetingNote(config, note, archiveAfterImport))
+    } catch (error) {
+      errors.push({ note, error: error as Error })
+    }
+  }
+
+  return { results, errors }
 }
 
 /**
