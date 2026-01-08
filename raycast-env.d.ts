@@ -15,7 +15,9 @@ type ExtensionPreferences = {
   /** Todoist API Key - Todoist API key for task management features (task, tasks, inbox commands) */
   "todoistApiKey"?: string,
   /** Voice Transcription Path - Folder where Superwhisper saves voice transcriptions */
-  "voicePath"?: string
+  "voicePath"?: string,
+  /** Meeting Notes Path - Folder where Granola exports meeting notes */
+  "meetingPath"?: string
 }
 
 /** Preferences accessible in all the extension's commands */
@@ -44,6 +46,8 @@ declare namespace Preferences {
   export type Inbox = ExtensionPreferences & {}
   /** Preferences accessible in the `voice` command */
   export type Voice = ExtensionPreferences & {}
+  /** Preferences accessible in the `meeting` command */
+  export type Meeting = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
@@ -69,5 +73,7 @@ declare namespace Arguments {
   export type Inbox = {}
   /** Arguments passed to the `voice` command */
   export type Voice = {}
+  /** Arguments passed to the `meeting` command */
+  export type Meeting = {}
 }
 
