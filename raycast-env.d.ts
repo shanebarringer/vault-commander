@@ -13,7 +13,9 @@ type ExtensionPreferences = {
   /** Claude API Key - Anthropic API key for AI features (ask, summarize, reflect commands) */
   "claudeApiKey"?: string,
   /** Todoist API Key - Todoist API key for task management features (task, tasks, inbox commands) */
-  "todoistApiKey"?: string
+  "todoistApiKey"?: string,
+  /** Voice Transcription Path - Folder where Superwhisper saves voice transcriptions */
+  "voicePath"?: string
 }
 
 /** Preferences accessible in all the extension's commands */
@@ -40,6 +42,8 @@ declare namespace Preferences {
   export type Tasks = ExtensionPreferences & {}
   /** Preferences accessible in the `inbox` command */
   export type Inbox = ExtensionPreferences & {}
+  /** Preferences accessible in the `voice` command */
+  export type Voice = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
@@ -63,5 +67,7 @@ declare namespace Arguments {
   export type Tasks = {}
   /** Arguments passed to the `inbox` command */
   export type Inbox = {}
+  /** Arguments passed to the `voice` command */
+  export type Voice = {}
 }
 
