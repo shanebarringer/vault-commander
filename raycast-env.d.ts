@@ -13,7 +13,13 @@ type ExtensionPreferences = {
   /** Claude API Key - Anthropic API key for AI features (ask, summarize, reflect commands) */
   "claudeApiKey"?: string,
   /** Todoist API Key - Todoist API key for task management features (task, tasks, inbox commands) */
-  "todoistApiKey"?: string
+  "todoistApiKey"?: string,
+  /** Voice Transcription Path - Folder where Superwhisper saves voice transcriptions */
+  "voicePath"?: string,
+  /** Meeting Notes Path - Folder where Granola exports meeting notes */
+  "meetingPath"?: string,
+  /** Scripts Path - Folder containing automation shell scripts (.sh files) */
+  "scriptsPath"?: string
 }
 
 /** Preferences accessible in all the extension's commands */
@@ -40,6 +46,12 @@ declare namespace Preferences {
   export type Tasks = ExtensionPreferences & {}
   /** Preferences accessible in the `inbox` command */
   export type Inbox = ExtensionPreferences & {}
+  /** Preferences accessible in the `voice` command */
+  export type Voice = ExtensionPreferences & {}
+  /** Preferences accessible in the `meeting` command */
+  export type Meeting = ExtensionPreferences & {}
+  /** Preferences accessible in the `scripts` command */
+  export type Scripts = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
@@ -63,5 +75,11 @@ declare namespace Arguments {
   export type Tasks = {}
   /** Arguments passed to the `inbox` command */
   export type Inbox = {}
+  /** Arguments passed to the `voice` command */
+  export type Voice = {}
+  /** Arguments passed to the `meeting` command */
+  export type Meeting = {}
+  /** Arguments passed to the `scripts` command */
+  export type Scripts = {}
 }
 

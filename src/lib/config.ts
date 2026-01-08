@@ -64,6 +64,11 @@ export const getConfig = (): VaultCommanderConfig => {
 
     // Phase 3 - Todoist API
     todoistApiKey: prefs.todoistApiKey,
+
+    // Phase 4 - Voice & Automation
+    voicePath: prefs.voicePath ? expandPath(prefs.voicePath) : undefined,
+    meetingPath: prefs.meetingPath ? expandPath(prefs.meetingPath) : undefined,
+    scriptsPath: prefs.scriptsPath ? expandPath(prefs.scriptsPath) : undefined,
   }
 }
 
