@@ -88,10 +88,10 @@
     "@types/node": "22.14.0",
     "@types/react": "18.3.18",
     "@vitest/coverage-v8": "^4.0.16",
+    "lefthook": "^2.0.13",
     "memfs": "^4.51.1",
     "typescript": "^5.7.2",
-    "vitest": "^4.0.16",
-    "lefthook": "^2.0.13"
+    "vitest": "^4.0.16"
   },
   "scripts": {
     "postinstall": "lefthook install",
