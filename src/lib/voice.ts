@@ -8,7 +8,7 @@
  */
 
 import { readdirSync, renameSync, statSync } from 'node:fs'
-import { basename, extname, join } from 'node:path'
+import { dirname, extname, join } from 'node:path'
 import dayjs from 'dayjs'
 import type { VaultCommanderConfig } from '../types'
 import { getDailyNoteLink, getTimestamp } from './daily'
@@ -32,8 +32,6 @@ export interface TranscriptionFile {
   readonly content: string
   /** File creation/modification time */
   readonly timestamp: Date
-  /** Whether already imported */
-  readonly imported: boolean
 }
 
 /**
@@ -66,14 +64,12 @@ export const listTranscriptions = (sourcePath: string): TranscriptionFile[] => {
       .map((filename) => {
         const filePath = join(sourcePath, filename)
         const stats = statSync(filePath)
-        const importedMarkerPath = join(sourcePath, `${IMPORTED_PREFIX}${filename}`)
 
         return {
           filename,
           path: filePath,
           content: readFile(filePath),
           timestamp: stats.mtime,
-          imported: false, // We don't track imports, we move files
         }
       })
       .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime())
@@ -111,7 +107,7 @@ export const importTranscription = (
   // Archive the source file (rename with prefix) to prevent re-import
   if (archiveAfterImport) {
     const archivePath = join(
-      transcription.path.replace(transcription.filename, ''),
+      dirname(transcription.path),
       `${IMPORTED_PREFIX}${transcription.filename}`
     )
     renameSync(transcription.path, archivePath)

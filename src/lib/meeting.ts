@@ -8,7 +8,7 @@
  */
 
 import { readdirSync, renameSync, statSync } from 'node:fs'
-import { extname, join } from 'node:path'
+import { dirname, extname, join } from 'node:path'
 import dayjs from 'dayjs'
 import type { VaultCommanderConfig } from '../types'
 import { getDailyNoteLink, getTimestamp } from './daily'
@@ -134,10 +134,7 @@ export const importMeetingNote = (
 
   // Archive source file
   if (archiveAfterImport) {
-    const archivePath = join(
-      note.path.replace(note.filename, ''),
-      `${IMPORTED_PREFIX}${note.filename}`
-    )
+    const archivePath = join(dirname(note.path), `${IMPORTED_PREFIX}${note.filename}`)
     renameSync(note.path, archivePath)
   }
 
