@@ -32,7 +32,6 @@ describe('meeting', () => {
 
     mkdirSync(join(vaultDir, 'Inbox'), { recursive: true })
     mkdirSync(join(vaultDir, 'Journal', 'Daily'), { recursive: true })
-    meetingDir = join(testDir, 'meetings')
     mkdirSync(meetingDir, { recursive: true })
 
     mockConfig = {
