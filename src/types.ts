@@ -39,6 +39,7 @@ export type WikiLink = `[[${string}]]`
 export interface Preferences {
   readonly vaultPath: string
   readonly claudeApiKey?: string
+  readonly todoistApiKey?: string
 }
 
 /**

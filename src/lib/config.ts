@@ -61,6 +61,9 @@ export const getConfig = (): VaultCommanderConfig => {
 
     // Phase 2 - Claude API
     claudeApiKey: prefs.claudeApiKey,
+
+    // Phase 3 - Todoist API
+    todoistApiKey: prefs.todoistApiKey,
   }
 }
 

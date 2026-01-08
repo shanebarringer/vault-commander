@@ -11,7 +11,9 @@ type ExtensionPreferences = {
   /** Vault Path - Path to your Obsidian vault */
   "vaultPath": string,
   /** Claude API Key - Anthropic API key for AI features (ask, summarize, reflect commands) */
-  "claudeApiKey"?: string
+  "claudeApiKey"?: string,
+  /** Todoist API Key - Todoist API key for task management features (task, tasks, inbox commands) */
+  "todoistApiKey"?: string
 }
 
 /** Preferences accessible in all the extension's commands */
@@ -32,6 +34,12 @@ declare namespace Preferences {
   export type Summarize = ExtensionPreferences & {}
   /** Preferences accessible in the `reflect` command */
   export type Reflect = ExtensionPreferences & {}
+  /** Preferences accessible in the `task` command */
+  export type Task = ExtensionPreferences & {}
+  /** Preferences accessible in the `tasks` command */
+  export type Tasks = ExtensionPreferences & {}
+  /** Preferences accessible in the `inbox` command */
+  export type Inbox = ExtensionPreferences & {}
 }
 
 declare namespace Arguments {
@@ -49,5 +57,11 @@ declare namespace Arguments {
   export type Summarize = {}
   /** Arguments passed to the `reflect` command */
   export type Reflect = {}
+  /** Arguments passed to the `task` command */
+  export type Task = {}
+  /** Arguments passed to the `tasks` command */
+  export type Tasks = {}
+  /** Arguments passed to the `inbox` command */
+  export type Inbox = {}
 }
 

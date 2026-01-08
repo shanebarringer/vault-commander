@@ -58,6 +58,27 @@
       "subtitle": "Stoic reflection prompts",
       "description": "Generate thoughtful Stoic reflection prompts based on your vault content",
       "mode": "view"
+    },
+    {
+      "name": "task",
+      "title": "Vault Task",
+      "subtitle": "Quick task creation",
+      "description": "Create a new task in Todoist with natural language due dates",
+      "mode": "view"
+    },
+    {
+      "name": "tasks",
+      "title": "Vault Tasks",
+      "subtitle": "Today's tasks",
+      "description": "View and manage today's tasks from Todoist",
+      "mode": "view"
+    },
+    {
+      "name": "inbox",
+      "title": "Vault Inbox",
+      "subtitle": "Todoist inbox triage",
+      "description": "Review and organize tasks in your Todoist inbox",
+      "mode": "view"
     }
   ],
   "preferences": [
@@ -75,13 +96,20 @@
       "required": false,
       "title": "Claude API Key",
       "description": "Anthropic API key for AI features (ask, summarize, reflect commands)"
+    },
+    {
+      "name": "todoistApiKey",
+      "type": "password",
+      "required": false,
+      "title": "Todoist API Key",
+      "description": "Todoist API key for task management features (task, tasks, inbox commands)"
     }
   ],
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
     "@raycast/api": "^1.93.0",
     "dayjs": "^1.11.13",
-    "fuse.js": "^6.6.2"
+    "fuse.js": "6.6.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
