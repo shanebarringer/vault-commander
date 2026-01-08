@@ -79,63 +79,66 @@ export const useSearchIndex = (vaultPath: string | undefined): UseSearchIndexRes
   const [error, setError] = useState<string | null>(null)
   const buildInProgress = useRef(false)
 
-  const buildIndex = useCallback(async (forceFresh = false) => {
-    if (!vaultPath) {
-      setIsIndexing(false)
-      return
-    }
+  const buildIndex = useCallback(
+    async (forceFresh = false) => {
+      if (!vaultPath) {
+        setIsIndexing(false)
+        return
+      }
 
-    // Check cache first (unless force refresh)
-    if (!forceFresh && isCacheValid(vaultPath) && indexCache) {
-      setIndex(indexCache.index)
-      setIsIndexing(false)
-      return
-    }
+      // Check cache first (unless force refresh)
+      if (!forceFresh && isCacheValid(vaultPath) && indexCache) {
+        setIndex(indexCache.index)
+        setIsIndexing(false)
+        return
+      }
 
-    // Prevent duplicate builds
-    if (buildInProgress.current) return
-    buildInProgress.current = true
+      // Prevent duplicate builds
+      if (buildInProgress.current) return
+      buildInProgress.current = true
 
-    setIsIndexing(true)
-    setError(null)
+      setIsIndexing(true)
+      setError(null)
 
-    // Show loading toast for large vault indication
-    const loadingToast = await showToast({
-      style: Toast.Style.Animated,
-      title: 'Indexing vault...',
-    })
+      // Show loading toast for large vault indication
+      const loadingToast = await showToast({
+        style: Toast.Style.Animated,
+        title: 'Indexing vault...',
+      })
 
-    // Use setTimeout to defer heavy work and let UI render first
-    await new Promise<void>((resolve) => {
-      setTimeout(async () => {
-        try {
-          const searchIndex = buildSearchIndex(vaultPath)
+      // Use setTimeout to defer heavy work and let UI render first
+      await new Promise<void>((resolve) => {
+        setTimeout(async () => {
+          try {
+            const searchIndex = buildSearchIndex(vaultPath)
 
-          // Update cache
-          indexCache = {
-            index: searchIndex,
-            vaultPath,
-            timestamp: Date.now(),
+            // Update cache
+            indexCache = {
+              index: searchIndex,
+              vaultPath,
+              timestamp: Date.now(),
+            }
+
+            setIndex(searchIndex)
+            loadingToast.hide()
+          } catch (e) {
+            const message = e instanceof Error ? e.message : 'Unknown error'
+            setError(message)
+            await showToast({
+              style: Toast.Style.Failure,
+              title: 'Failed to index vault',
+              message,
+            })
+          } finally {
+            setIsIndexing(false)
+            buildInProgress.current = false
+            resolve()
           }
-
-          setIndex(searchIndex)
-          loadingToast.hide()
-        } catch (e) {
-          const message = e instanceof Error ? e.message : 'Unknown error'
-          setError(message)
-          await showToast({
-            style: Toast.Style.Failure,
-            title: 'Failed to index vault',
-            message,
-          })
-        } finally {
-          setIsIndexing(false)
-          buildInProgress.current = false
-          resolve()
-        }
-      }, 0)
-    })
-  }, [vaultPath])
+        }, 0)
+      })
+    },
+    [vaultPath]
+  )
 
   // Build index on mount or when vaultPath changes
   useEffect(() => {

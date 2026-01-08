@@ -14,10 +14,10 @@ import type { SearchIndex } from '../types'
 import { searchVault } from './search'
 
 /** Default model for Claude API calls */
-const DEFAULT_MODEL = 'claude-sonnet-4-20250514'
+const DEFAULT_MODEL = 'claude-3-5-sonnet-20241022'
 
 /** Max tokens for response generation */
-const MAX_TOKENS = 1024
+const MAX_TOKENS = 4096
 
 /** Number of relevant notes to include as context */
 const CONTEXT_NOTES_LIMIT = 5
@@ -35,10 +35,7 @@ export const createClaudeClient = (apiKey: string): Anthropic => {
  * Claude responses contain an array of content blocks. This helper
  * finds the first text block and extracts its content.
  */
-const extractTextResponse = (
-  message: Anthropic.Message,
-  fallback: string
-): string => {
+const extractTextResponse = (message: Anthropic.Message, fallback: string): string => {
   const textBlock = message.content.find((block) => block.type === 'text')
   return textBlock?.type === 'text' ? textBlock.text : fallback
 }
