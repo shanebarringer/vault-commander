@@ -59,6 +59,9 @@ export const getConfig = (): VaultCommanderConfig => {
     inboxPath: 'Inbox' as RelativePath,
     sections: DEFAULT_SECTIONS,
 
+    // Phase 2 - Claude API
+    claudeApiKey: prefs.claudeApiKey,
+
     // Phase 3 - Todoist API
     todoistApiKey: prefs.todoistApiKey,
   }

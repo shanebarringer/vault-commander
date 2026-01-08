@@ -39,6 +39,27 @@
       "mode": "view"
     },
     {
+      "name": "ask",
+      "title": "Vault Ask",
+      "subtitle": "Ask Claude about your vault",
+      "description": "Query your vault using Claude AI - ask questions about your notes",
+      "mode": "view"
+    },
+    {
+      "name": "summarize",
+      "title": "Vault Summarize",
+      "subtitle": "Summarize notes with AI",
+      "description": "Use Claude to summarize selected notes or search results",
+      "mode": "view"
+    },
+    {
+      "name": "reflect",
+      "title": "Vault Reflect",
+      "subtitle": "Stoic reflection prompts",
+      "description": "Generate thoughtful Stoic reflection prompts based on your vault content",
+      "mode": "view"
+    },
+    {
       "name": "task",
       "title": "Vault Task",
       "subtitle": "Quick task creation",
@@ -70,6 +91,13 @@
       "default": "~/vault"
     },
     {
+      "name": "claudeApiKey",
+      "type": "password",
+      "required": false,
+      "title": "Claude API Key",
+      "description": "Anthropic API key for AI features (ask, summarize, reflect commands)"
+    },
+    {
       "name": "todoistApiKey",
       "type": "password",
       "required": false,
@@ -78,6 +106,7 @@
     }
   ],
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
     "@raycast/api": "^1.93.0",
     "dayjs": "^1.11.13",
     "fuse.js": "6.6.2"
