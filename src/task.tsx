@@ -4,10 +4,10 @@
  * Quick task creation in Todoist with natural language due dates.
  */
 
-import { Action, ActionPanel, Form, showHUD, showToast, Toast } from '@raycast/api'
+import { Action, ActionPanel, Form, Toast, showHUD, showToast } from '@raycast/api'
 import { useMemo, useState } from 'react'
 import { getConfig } from './lib/config'
-import { createTodoistClient, type CreateTaskOptions } from './lib/todoist'
+import { type CreateTaskOptions, createTodoistClient } from './lib/todoist'
 import type { VaultCommanderConfig } from './types'
 
 type Priority = '1' | '2' | '3' | '4'
@@ -49,17 +49,13 @@ export default function Command() {
     setIsLoading(true)
     try {
       const client = createTodoistClient(config.todoistApiKey)
+
+      // Build options immutably with conditional spread
       const options: CreateTaskOptions = {
         content: content.trim(),
         priority: Number(priority) as 1 | 2 | 3 | 4,
-      }
-
-      if (description.trim()) {
-        options.description = description.trim()
-      }
-
-      if (dueString.trim()) {
-        options.due_string = dueString.trim()
+        ...(description.trim() && { description: description.trim() }),
+        ...(dueString.trim() && { due_string: dueString.trim() }),
       }
 
       await client.createTask(options)
@@ -105,7 +101,12 @@ export default function Command() {
         value={dueString}
         onChange={setDueString}
       />
-      <Form.Dropdown id="priority" title="Priority" value={priority} onChange={(v) => setPriority(v as Priority)}>
+      <Form.Dropdown
+        id="priority"
+        title="Priority"
+        value={priority}
+        onChange={(v) => setPriority(v as Priority)}
+      >
         <Form.Dropdown.Item title="Normal" value="1" />
         <Form.Dropdown.Item title="Medium !" value="2" />
         <Form.Dropdown.Item title="High !!" value="3" />

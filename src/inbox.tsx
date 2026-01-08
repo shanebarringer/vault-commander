@@ -5,16 +5,16 @@
  * Quick triage: schedule, move to project, or complete.
  */
 
-import { Action, ActionPanel, Color, Icon, List, showHUD, showToast, Toast } from '@raycast/api'
+import { Action, ActionPanel, Color, Icon, List, Toast, showHUD, showToast } from '@raycast/api'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getConfig } from './lib/config'
 import {
-  createTodoistClient,
-  formatPriority,
-  getPriorityColor,
   type TodoistClient,
   type TodoistProject,
   type TodoistTask,
+  createTodoistClient,
+  formatPriority,
+  getPriorityColor,
 } from './lib/todoist'
 import type { VaultCommanderConfig } from './types'
 
@@ -53,7 +53,11 @@ export default function Command() {
       ])
 
       // Sort by creation date (oldest first for triage)
-      setTasks(inboxTasks.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()))
+      setTasks(
+        inboxTasks.sort(
+          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        )
+      )
 
       // Filter out inbox from project list for move actions
       setProjects(allProjects.filter((p) => !p.is_inbox_project))
@@ -212,14 +216,16 @@ export default function Command() {
                   </ActionPanel.Section>
 
                   <ActionPanel.Section title="Move to Project">
-                    {projects.slice(0, 8).map((project) => (
-                      <Action
-                        key={project.id}
-                        title={project.name}
-                        icon={Icon.Folder}
-                        onAction={() => handleMoveToProject(task, project)}
-                      />
-                    ))}
+                    <ActionPanel.Submenu title="Move to..." icon={Icon.Folder}>
+                      {projects.map((project) => (
+                        <Action
+                          key={project.id}
+                          title={project.name}
+                          icon={Icon.Folder}
+                          onAction={() => handleMoveToProject(task, project)}
+                        />
+                      ))}
+                    </ActionPanel.Submenu>
                   </ActionPanel.Section>
 
                   <ActionPanel.Section title="More Schedule Options">

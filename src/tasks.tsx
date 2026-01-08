@@ -4,15 +4,15 @@
  * View and manage today's tasks from Todoist.
  */
 
-import { Action, ActionPanel, Color, Icon, List, showHUD, showToast, Toast } from '@raycast/api'
+import { Action, ActionPanel, Color, Icon, List, Toast, showHUD, showToast } from '@raycast/api'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getConfig } from './lib/config'
 import {
+  type TodoistClient,
+  type TodoistTask,
   createTodoistClient,
   formatPriority,
   getPriorityColor,
-  type TodoistClient,
-  type TodoistTask,
 } from './lib/todoist'
 import type { VaultCommanderConfig } from './types'
 
