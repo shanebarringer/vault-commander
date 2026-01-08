@@ -10,7 +10,8 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/lib/**/*.ts'],
-      exclude: ['src/**/*.tsx', 'src/__tests__/**'],
+      // Exclude API clients (integration tested, not unit tested)
+      exclude: ['src/**/*.tsx', 'src/__tests__/**', 'src/lib/todoist.ts'],
       reporter: ['text', 'lcov', 'html'],
       thresholds: {
         lines: 80,
