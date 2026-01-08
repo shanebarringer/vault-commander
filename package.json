@@ -80,7 +80,7 @@
   "dependencies": {
     "@raycast/api": "^1.93.0",
     "dayjs": "^1.11.13",
-    "fuse.js": "^7.0.0"
+    "fuse.js": "6.6.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -90,9 +90,11 @@
     "@vitest/coverage-v8": "^4.0.16",
     "memfs": "^4.51.1",
     "typescript": "^5.7.2",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.16",
+    "lefthook": "^2.0.13"
   },
   "scripts": {
+    "postinstall": "lefthook install",
     "build": "ray build --skip-types -e dist -o dist",
     "dev": "ray develop",
     "check": "biome check --write .",

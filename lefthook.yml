@@ -1,0 +1,21 @@
+# Lefthook git hooks configuration
+# https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{ts,tsx,js,jsx}"
+      run: pnpm lint
+    format-check:
+      glob: "*.{ts,tsx,js,jsx,json,md}"
+      run: pnpm biome check --no-errors-on-unmatched {staged_files}
+    typecheck:
+      run: pnpm exec tsc --noEmit
+
+pre-push:
+  commands:
+    test:
+      run: pnpm test
+    build:
+      run: pnpm build

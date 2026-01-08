@@ -63,6 +63,10 @@ export interface CreateTaskOptions {
  * Create Todoist API client
  */
 export const createTodoistClient = (apiKey: string) => {
+  if (!apiKey?.trim()) {
+    throw new Error('Todoist API key is required')
+  }
+
   const headers = {
     Authorization: `Bearer ${apiKey}`,
     'Content-Type': 'application/json',
@@ -86,7 +90,7 @@ export const createTodoistClient = (apiKey: string) => {
       return undefined as T
     }
 
-    return response.json()
+    return response.json() as T
   }
 
   return {

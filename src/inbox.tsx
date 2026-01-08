@@ -85,7 +85,7 @@ export default function Command() {
     try {
       await client.completeTask(task.id)
       await showHUD('✓ Task completed')
-      setTasks(tasks.filter((t) => t.id !== task.id))
+      setTasks((prev) => prev.filter((t) => t.id !== task.id))
     } catch (e) {
       showToast({
         style: Toast.Style.Failure,
@@ -101,7 +101,7 @@ export default function Command() {
     try {
       await client.deleteTask(task.id)
       await showHUD('✓ Task deleted')
-      setTasks(tasks.filter((t) => t.id !== task.id))
+      setTasks((prev) => prev.filter((t) => t.id !== task.id))
     } catch (e) {
       showToast({
         style: Toast.Style.Failure,
@@ -133,7 +133,7 @@ export default function Command() {
     try {
       await client.moveTask(task.id, project.id)
       await showHUD(`✓ Moved to ${project.name}`)
-      setTasks(tasks.filter((t) => t.id !== task.id))
+      setTasks((prev) => prev.filter((t) => t.id !== task.id))
     } catch (e) {
       showToast({
         style: Toast.Style.Failure,
@@ -161,7 +161,7 @@ export default function Command() {
         <List.EmptyView
           title="Inbox Zero!"
           description="No tasks in your inbox. Well done! 🎉"
-          icon={Icon.Inbox}
+          icon={Icon.Tray}
         />
       ) : (
         <List.Section title={`Inbox (${tasks.length})`} subtitle="Oldest first">

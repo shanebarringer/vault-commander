@@ -71,7 +71,7 @@ export default function Command() {
     try {
       await client.completeTask(task.id)
       await showHUD('✓ Task completed')
-      setTasks(tasks.filter((t) => t.id !== task.id))
+      setTasks((prev) => prev.filter((t) => t.id !== task.id))
     } catch (e) {
       showToast({
         style: Toast.Style.Failure,
@@ -132,12 +132,14 @@ export default function Command() {
                 text: formatPriority(task.priority),
                 tooltip: `Priority ${task.priority}`,
               },
-              task.due
-                ? {
-                    text: task.due.string,
-                    tooltip: task.due.datetime || task.due.date,
-                  }
-                : {},
+              ...(task.due
+                ? [
+                    {
+                      text: task.due.string,
+                      tooltip: task.due.datetime || task.due.date,
+                    },
+                  ]
+                : []),
               {
                 icon: {
                   source: Icon.Dot,
