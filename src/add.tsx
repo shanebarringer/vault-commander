@@ -3,9 +3,11 @@
  *
  * Append text to a specific section of today's daily note.
  * Dropdown to select section, TextArea for content.
+ * Automatically populates with selected text if available.
  */
 
-import { Action, ActionPanel, Form, popToRoot, showHUD } from '@raycast/api'
+import { Action, ActionPanel, Form, getSelectedText, popToRoot, showHUD } from '@raycast/api'
+import { useEffect, useState } from 'react'
 import { DEFAULT_SECTIONS } from './lib/config'
 import { getDailyNotePath } from './lib/daily'
 import { appendToSection, ensureDailyNote, getConfig } from './lib/vault'
@@ -63,9 +65,27 @@ const AddAction = () => <Action.SubmitForm title="Add" onSubmit={handleSubmit} /
 
 export default function Command() {
   const sectionKeys = Object.keys(DEFAULT_SECTIONS) as SectionKey[]
+  const [initialContent, setInitialContent] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    getSelectedText()
+      .then((text) => {
+        if (text.trim()) {
+          setInitialContent(text)
+        }
+      })
+      .catch(() => {
+        // No selection available, that's fine
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }, [])
 
   return (
     <Form
+      isLoading={isLoading}
       actions={
         <ActionPanel>
           <AddAction />
@@ -81,6 +101,7 @@ export default function Command() {
         id="content"
         title="Content"
         placeholder="What do you want to add?"
+        defaultValue={initialContent}
         enableMarkdown
       />
     </Form>
