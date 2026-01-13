@@ -40,6 +40,9 @@ export interface Preferences {
   readonly vaultPath: string
   readonly claudeApiKey?: string
   readonly todoistApiKey?: string
+  readonly voicePath?: string
+  readonly meetingPath?: string
+  readonly scriptsPath?: string
 }
 
 /**
@@ -82,6 +85,11 @@ export interface VaultCommanderConfig {
   // Phase 3 - Todoist (optional, added later)
   readonly todoistApiKey?: string
   readonly todoistProjectMapping?: Readonly<Record<string, string>>
+
+  // Phase 4 - Voice & Automation (optional)
+  readonly voicePath?: AbsolutePath
+  readonly meetingPath?: AbsolutePath
+  readonly scriptsPath?: AbsolutePath
 }
 
 // ============================================================================

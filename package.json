@@ -79,6 +79,27 @@
       "subtitle": "Todoist inbox triage",
       "description": "Review and organize tasks in your Todoist inbox",
       "mode": "view"
+    },
+    {
+      "name": "voice",
+      "title": "Vault Voice",
+      "subtitle": "Import voice notes",
+      "description": "Import voice transcriptions from Superwhisper to vault inbox",
+      "mode": "view"
+    },
+    {
+      "name": "meeting",
+      "title": "Vault Meeting",
+      "subtitle": "Import meeting notes",
+      "description": "Import meeting notes from Granola to daily note Meeting Notes section",
+      "mode": "view"
+    },
+    {
+      "name": "scripts",
+      "title": "Vault Scripts",
+      "subtitle": "Run automation scripts",
+      "description": "Run shell scripts for vault automation and maintenance tasks",
+      "mode": "view"
     }
   ],
   "preferences": [
@@ -103,6 +124,27 @@
       "required": false,
       "title": "Todoist API Key",
       "description": "Todoist API key for task management features (task, tasks, inbox commands)"
+    },
+    {
+      "name": "voicePath",
+      "type": "directory",
+      "required": false,
+      "title": "Voice Transcription Path",
+      "description": "Folder where Superwhisper saves voice transcriptions"
+    },
+    {
+      "name": "meetingPath",
+      "type": "directory",
+      "required": false,
+      "title": "Meeting Notes Path",
+      "description": "Folder where Granola exports meeting notes"
+    },
+    {
+      "name": "scriptsPath",
+      "type": "directory",
+      "required": false,
+      "title": "Scripts Path",
+      "description": "Folder containing automation shell scripts (.sh files)"
     }
   ],
   "dependencies": {
